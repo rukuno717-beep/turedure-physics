@@ -61,12 +61,12 @@ export default function Header() {
     singleImage = "/yama.jpg";
     singlePos = "center 35%";
   } else if (pathname.includes("/categories/a0p7s73val7")) {
-    // 読書とことこ（ハクセキレイ2枚並び）
+    // 読書とことこ（ハクセキレイ2枚並び：引きの構図に調整）
     isDual = true;
     leftImage = "/hakusekirei2.jpg";
-    leftPos = "center 25%";
+    leftPos = "center 50%";
     rightImage = "/hakusekirei.jpg";
-    rightPos = "center 40%";
+    rightPos = "right 50%";
   } else if (pathname.includes("/categories/nya1qqbmm")) {
     // 日常備忘録（メジロ2枚並び）
     isDual = true;
@@ -75,7 +75,7 @@ export default function Header() {
     rightImage = "/mejiro.jpg";
     rightPos = "center 25%";
   } else {
-    // TOPページ & 物理学とことこ（雲海：太陽と山並みをしっかり入れて引きの構図に）
+    // TOPページ & 物理学とことこ（雲海）
     singleImage = "/unkai.jpg";
     singlePos = "center 15%";
   }
@@ -85,7 +85,7 @@ export default function Header() {
       <header className="relative w-full min-h-[260px] md:min-h-[520px] flex flex-col justify-end md:justify-between items-start overflow-hidden shadow-md py-5 md:py-12 px-4 md:px-12 bg-neutral-100">
         {/* 背景画像エリア */}
         {isDual ? (
-          <div className="absolute inset-0 flex w-full h-full">
+          <div className="absolute inset-0 flex w-full h-full bg-slate-900/10">
             <div
               className="w-1/2 h-full bg-cover bg-no-repeat border-r border-white/30"
               style={{

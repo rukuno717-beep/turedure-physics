@@ -32,10 +32,10 @@ export default async function BlogPostPage({
 
       {/* 記事ヘッダー */}
       <div className="border-b-2 border-neutral-300 pb-6 space-y-3">
-        <h1 className="text-3xl md:text-4xl font-bold text-black leading-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black leading-tight">
           {blog.title}
         </h1>
-        <div className="flex items-center gap-3 text-sm text-neutral-600 font-medium">
+        <div className="flex items-center gap-3 text-xs sm:text-sm text-neutral-600 font-medium">
           <time>
             公開日: {new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
           </time>
@@ -47,14 +47,14 @@ export default async function BlogPostPage({
         </div>
       </div>
 
-      {/* 記事本文 */}
+      {/* 記事本文（スマホ時は text-sm、PC時は text-lg に自動調整） */}
       <div
-        className="leading-loose text-base md:text-lg text-black font-medium space-y-6
-          [&>p]:mb-4 [&>p]:leading-loose
-          [&>h1]:text-2xl [&>h1]:font-bold [&>h1]:text-black [&>h1]:mt-8 [&>h1]:mb-3
-          [&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-black [&>h2]:border-l-4 [&>h2]:border-[#0284c7] [&>h2]:pl-3 [&>h2]:mt-6 [&>h2]:mb-3
-          [&>h3]:text-lg [&>h3]:font-bold [&>h3]:text-black [&>h3]:mt-5 [&>h3]:mb-2
-          [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-4
+        className="leading-relaxed sm:leading-loose text-sm sm:text-base md:text-lg text-black font-medium space-y-5 sm:space-y-6
+          [&>p]:mb-4 [&>p]:leading-relaxed sm:[&>p]:leading-loose
+          [&>h1]:text-xl sm:[&>h1]:text-2xl [&>h1]:font-bold [&>h1]:text-black [&>h1]:mt-8 [&>h1]:mb-3
+          [&>h2]:text-lg sm:[&>h2]:text-xl [&>h2]:font-bold [&>h2]:text-black [&>h2]:border-l-4 [&>h2]:border-[#0284c7] [&>h2]:pl-3 [&>h2]:mt-6 [&>h2]:mb-3
+          [&>h3]:text-base sm:[&>h3]:text-lg [&>h3]:font-bold [&>h3]:text-black [&>h3]:mt-5 [&>h3]:mb-2
+          [&>ul]:list-disc [&>ul]:pl-5 sm:[&>ul]:pl-6 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-5 sm:[&>ol]:pl-6 [&>ol]:mb-4
           [&>blockquote]:border-l-4 [&>blockquote]:border-neutral-300 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:my-4"
         dangerouslySetInnerHTML={{ __html: blog.content || blog.body || '' }}
       />
