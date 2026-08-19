@@ -4,10 +4,10 @@ import { PhysicsIcon, NoteIcon, BookIcon, CoffeeIcon } from '@/components/Header
 export default function Home() {
   return (
     <div className="space-y-12 max-w-3xl">
-      {/* 日々のまとめ セクション */}
+      {/* 日々の備忘録 セクション */}
       <section>
         <h2 className="text-3xl font-bold text-black border-b-2 border-neutral-300 pb-3 mb-6 tracking-wide">
-          日々のまとめ
+          日々の備忘録に
         </h2>
 
         {/* 本文（スマホは text-sm、PCは text-base） */}
