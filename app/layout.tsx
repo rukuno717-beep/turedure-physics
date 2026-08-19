@@ -1,24 +1,38 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
+import { Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
+
+const notoSerif = Noto_Serif_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
-  title: "徒然物理学 - 徒然なるままに物理学を",
-  description: "物理学の全体像、備忘録、読書記録など",
+  title: "徒然物理学",
+  description: "徒然なるままに物理学を綴るサイト",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="ja">
-      <body className="bg-white text-black min-h-screen font-serif antialiased">
+      <body className={`${notoSerif.className} bg-neutral-50 text-neutral-900 antialiased min-h-screen flex flex-col`}>
+        {/* 共通ヘッダー */}
         <Header />
-        <div className="max-w-4xl mx-auto px-6 py-10 md:py-12">
+
+        {/* メインコンテンツ枠（スマホは px-3.5 でめいっぱい広く、PCは md:px-8） */}
+        <main className="flex-1 w-full max-w-4xl mx-auto px-3.5 sm:px-6 md:px-8 py-6 md:py-12">
           {children}
-        </div>
+        </main>
+
+        {/* フッター */}
+        <footer className="w-full border-t border-neutral-200 py-6 text-center text-xs text-neutral-500">
+          © 2026 徒然物理学
+        </footer>
       </body>
     </html>
   );
