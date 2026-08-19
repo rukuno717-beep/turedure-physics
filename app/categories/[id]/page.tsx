@@ -8,6 +8,9 @@ export default async function CategoryPage({
 }) {
   const { id } = await params;
 
+  // 物理備忘録 または 日常備忘録 かどうか判定（飛ばずにその場でタイトル＋本文を表示）
+  const isDirectView = id === '5fhila85r2-1' || id === 'nya1qqbmm';
+
   // カテゴリ情報と記事一覧を取得
   const [category, blogsData] = await Promise.all([
     client.get({
@@ -37,7 +40,7 @@ export default async function CategoryPage({
         </h1>
       </div>
 
-      {/* カテゴリ説明文（HTMLタグを正しく反映・PC文字サイズ維持） */}
+      {/* カテゴリ説明文 */}
       {category.description && (
         <div
           className="text-black text-sm md:text-base leading-relaxed md:leading-loose font-medium
@@ -46,30 +49,39 @@ export default async function CategoryPage({
         />
       )}
 
-      {/* 記事・日記一覧（元の水色カード・余計な日付を削除） */}
+      {/* 記事一覧 */}
       <div className="space-y-4 w-full pt-2">
         {blogs && blogs.length > 0 ? (
-          blogs.map((blog: any) => (
-            <Link
-              key={blog.id}
-              href={`/blogs/${blog.id}`}
-              className="block w-full bg-[#bae6fd] hover:bg-[#7dd3fc] transition-all rounded-xl p-5 md:p-6 shadow-sm"
-            >
-              <div className="space-y-2 w-full">
+          blogs.map((blog: any) =>
+            isDirectView ? (
+              /* 【物理備忘録・日常備忘録】リンクなし：タイトルと本文を同時に表示 */
+              <div
+                key={blog.id}
+                className="w-full bg-[#bae6fd] rounded-xl p-5 md:p-6 shadow-sm space-y-3"
+              >
                 <p className="font-bold text-lg md:text-xl text-black leading-snug">
                   {blog.title}
                 </p>
-
-                {/* 記事の本文プレビュー */}
                 <div
-                  className="text-black text-xs md:text-base leading-relaxed md:leading-loose font-medium line-clamp-3"
+                  className="text-black text-xs md:text-base leading-relaxed md:leading-loose font-medium"
                   dangerouslySetInnerHTML={{
                     __html: blog.content || blog.body || '',
                   }}
                 />
               </div>
-            </Link>
-          ))
+            ) : (
+              /* 【物理学とことこ・読書とことこ】リンクあり：タイトルのみ表示 */
+              <Link
+                key={blog.id}
+                href={`/blogs/${blog.id}`}
+                className="block w-full bg-[#bae6fd] hover:bg-[#7dd3fc] transition-all rounded-xl p-5 md:p-6 shadow-sm"
+              >
+                <p className="font-bold text-lg md:text-xl text-black leading-snug">
+                  {blog.title}
+                </p>
+              </Link>
+            )
+          )
         ) : (
           <p className="text-neutral-500 text-sm md:text-base py-4">まだ記事がありません。</p>
         )}
