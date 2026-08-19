@@ -32,48 +32,46 @@ export default async function CategoryPage({
         <span className="inline-block bg-sky-100 text-[#0284c7] px-2.5 py-0.5 rounded text-xs font-semibold">
           Section
         </span>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black tracking-wide">
+        <h1 className="text-3xl md:text-4xl font-bold text-black tracking-wide">
           {category.name}
         </h1>
       </div>
 
-      {/* カテゴリ説明文（スマホは text-sm、PCは text-base） */}
+      {/* カテゴリ説明文（HTMLタグを正しく反映・PC文字サイズ維持） */}
       {category.description && (
-        <div className="text-neutral-900 text-sm sm:text-base leading-relaxed md:leading-loose whitespace-pre-line font-medium">
-          {category.description}
-        </div>
+        <div
+          className="text-black text-sm md:text-base leading-relaxed md:leading-loose font-medium
+            [&>p]:mb-3 [&>p:last-child]:mb-0"
+          dangerouslySetInnerHTML={{ __html: category.description }}
+        />
       )}
 
-      {/* 記事・日記一覧（水色のカードを横幅いっぱいに展開） */}
+      {/* 記事・日記一覧（元の水色カード・余計な日付を削除） */}
       <div className="space-y-4 w-full pt-2">
         {blogs && blogs.length > 0 ? (
           blogs.map((blog: any) => (
             <Link
               key={blog.id}
               href={`/blogs/${blog.id}`}
-              className="block w-full bg-[#bae6fd]/50 hover:bg-[#7dd3fc]/60 transition-all rounded-xl p-4 sm:p-6 border border-sky-200 shadow-sm"
+              className="block w-full bg-[#bae6fd] hover:bg-[#7dd3fc] transition-all rounded-xl p-5 md:p-6 shadow-sm"
             >
-              <div className="space-y-2.5 w-full">
-                <p className="font-bold text-base sm:text-lg md:text-xl text-black leading-snug">
+              <div className="space-y-2 w-full">
+                <p className="font-bold text-lg md:text-xl text-black leading-snug">
                   {blog.title}
                 </p>
 
-                {/* 記事の冒頭または本文プレビュー */}
+                {/* 記事の本文プレビュー */}
                 <div
-                  className="text-neutral-800 text-xs sm:text-sm md:text-base leading-relaxed line-clamp-3 font-medium"
+                  className="text-black text-xs md:text-base leading-relaxed md:leading-loose font-medium line-clamp-3"
                   dangerouslySetInnerHTML={{
                     __html: blog.content || blog.body || '',
                   }}
                 />
-
-                <div className="pt-2 text-[11px] sm:text-xs text-neutral-600 font-medium">
-                  {new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
-                </div>
               </div>
             </Link>
           ))
         ) : (
-          <p className="text-neutral-500 text-sm py-4">まだ記事がありません。</p>
+          <p className="text-neutral-500 text-sm md:text-base py-4">まだ記事がありません。</p>
         )}
       </div>
 
