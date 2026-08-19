@@ -61,12 +61,12 @@ export default function Header() {
     singleImage = "/yama.jpg";
     singlePos = "center 35%";
   } else if (pathname.includes("/categories/a0p7s73val7")) {
-    // 読書とことこ（ハクセキレイ2枚並び：引きの構図に調整）
+    // 読書とことこ（ハクセキレイ2枚並び：右側の鳥の体が見えるよう位置調整）
     isDual = true;
     leftImage = "/hakusekirei2.jpg";
-    leftPos = "center 50%";
+    leftPos = "center 30%";
     rightImage = "/hakusekirei.jpg";
-    rightPos = "right 50%";
+    rightPos = "25% 45%";
   } else if (pathname.includes("/categories/nya1qqbmm")) {
     // 日常備忘録（メジロ2枚並び）
     isDual = true;
@@ -85,7 +85,7 @@ export default function Header() {
       <header className="relative w-full min-h-[260px] md:min-h-[520px] flex flex-col justify-end md:justify-between items-start overflow-hidden shadow-md py-5 md:py-12 px-4 md:px-12 bg-neutral-100">
         {/* 背景画像エリア */}
         {isDual ? (
-          <div className="absolute inset-0 flex w-full h-full bg-slate-900/10">
+          <div className="absolute inset-0 flex w-full h-full">
             <div
               className="w-1/2 h-full bg-cover bg-no-repeat border-r border-white/30"
               style={{
