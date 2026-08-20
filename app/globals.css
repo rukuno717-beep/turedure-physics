@@ -1,1 +1,6 @@
 @import "tailwindcss";
+/* microCMSの空の段落（Enterの連続押し）で空白行を確実に表示させる */
+p:empty::before,
+p:has(> br:only-child)::before {
+  content: "\00a0";
+}
