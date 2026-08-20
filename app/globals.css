@@ -4,3 +4,7 @@ p:empty::before,
 p:has(> br:only-child)::before {
   content: "\00a0";
 }
+/* microCMSエディタの太字（strong / b タグ）をスマホでも確実に太字にする */
+strong, b {
+  font-weight: 700 !important;
+}
