@@ -11,6 +11,10 @@ const notoSerif = Noto_Serif_JP({
 export const metadata: Metadata = {
   title: "徒然物理学",
   description: "徒然なるままに物理学を綴るサイト",
+  // Google Search Console の所有者確認キー
+  verification: {
+    google: "Q4k-ngpC_4G1tmPuISjxh27mXuW5l3mO3to9BMYJIaw",
+  },
 };
 
 export default function RootLayout({
@@ -24,7 +28,7 @@ export default function RootLayout({
         {/* 共通ヘッダー */}
         <Header />
 
-        {/* メインコンテンツ枠（スマホは px-3.5 でめいっぱい広く、PCは md:px-8） */}
+        {/* メインコンテンツ枠 */}
         <main className="flex-1 w-full max-w-4xl mx-auto px-3.5 sm:px-6 md:px-8 py-6 md:py-12">
           {children}
         </main>
