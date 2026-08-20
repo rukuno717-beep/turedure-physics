@@ -40,7 +40,7 @@ export default async function CategoryPage({
         </h1>
       </div>
 
-      {/* カテゴリTOP本文（エディタ内の見出し1・2・3を確実に大きく太字にする設定） */}
+      {/* カテゴリTOP本文 */}
       {category.description && (
         <div
           className="text-black text-sm md:text-base leading-relaxed md:leading-loose font-medium
@@ -52,7 +52,7 @@ export default async function CategoryPage({
         />
       )}
 
-      {/* microCMSの別フィールド「一覧見出し（「力学」など）」を表示 */}
+      {/* microCMSの別フィールド「一覧見出し（「力学」など）」 */}
       {category.listHeading && (
         <div className="pt-2">
           <h2 className="text-xl md:text-2xl font-bold text-black border-l-4 border-[#0284c7] pl-3 mb-0">
@@ -66,7 +66,7 @@ export default async function CategoryPage({
         {blogs && blogs.length > 0 ? (
           blogs.map((blog: any) =>
             isDirectView ? (
-              /* 【物理備忘録・日常備忘録】リンクなし：タイトルと本文を同時に表示 */
+              /* 【物理備忘録・日常備忘録】リンクなし：タイトルと本文を表示 */
               <div
                 key={blog.id}
                 className="w-full bg-[#bae6fd] rounded-xl p-5 md:p-6 shadow-sm space-y-3"
@@ -74,8 +74,9 @@ export default async function CategoryPage({
                 <p className="font-bold text-lg md:text-xl text-black leading-snug">
                   {blog.title}
                 </p>
+                {/* 携帯版の文字サイズを自己紹介と同じ text-sm に変更（PC版 text-base はそのまま維持） */}
                 <div
-                  className="text-black text-xs md:text-base leading-relaxed md:leading-loose font-medium"
+                  className="text-black text-sm md:text-base leading-relaxed md:leading-loose font-medium"
                   dangerouslySetInnerHTML={{
                     __html: blog.content || blog.body || '',
                   }}
