@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Serif_JP } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Header from "@/components/Header";
 
@@ -37,6 +38,9 @@ export default function RootLayout({
         <footer className="w-full border-t border-neutral-200 py-6 text-center text-xs text-neutral-500">
           © 2026 徒然物理学
         </footer>
+
+        {/* Vercel Analytics */}
+        <Analytics />
       </body>
     </html>
   );
