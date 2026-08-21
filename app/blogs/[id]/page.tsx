@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { client } from '@/libs/client';
+import MathHtml from '@/components/MathHtml';
 
 export default async function BlogPostPage({
   params,
@@ -48,7 +49,7 @@ export default async function BlogPostPage({
       </div>
 
       {/* 記事本文（地の文の文字サイズのみスマホで text-[14.5px]、PCで text-lg） */}
-      <div
+      <MathHtml
         className="leading-relaxed md:leading-loose text-[14.5px] md:text-lg text-black font-medium space-y-5 md:space-y-6
           [&>p]:mb-4 [&>p]:leading-relaxed md:[&>p]:leading-loose
           [&>h1]:text-2xl [&>h1]:font-bold [&>h1]:text-black [&>h1]:mt-8 [&>h1]:mb-3
@@ -56,7 +57,7 @@ export default async function BlogPostPage({
           [&>h3]:text-lg [&>h3]:font-bold [&>h3]:text-black [&>h3]:mt-5 [&>h3]:mb-2
           [&>ul]:list-disc [&>ul]:pl-5 md:[&>ul]:pl-6 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-5 md:[&>ol]:pl-6 [&>ol]:mb-4
           [&>blockquote]:border-l-4 [&>blockquote]:border-neutral-300 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:my-4"
-        dangerouslySetInnerHTML={{ __html: blog.content || blog.body || '' }}
+        html={blog.content || blog.body || ''}
       />
 
       {/* 記事下の戻りナビゲーション（元のまま） */}

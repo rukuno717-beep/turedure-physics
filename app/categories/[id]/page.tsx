@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { client } from '@/libs/client';
+import MathHtml from '@/components/MathHtml';
 
 export default async function CategoryPage({
   params,
@@ -42,13 +43,13 @@ export default async function CategoryPage({
 
       {/* カテゴリTOP本文 */}
       {category.description && (
-        <div
+        <MathHtml
           className="text-black text-sm md:text-base leading-relaxed md:leading-loose font-medium
             [&_p]:mb-3 [&_p:last-child]:mb-0
             [&_h1]:text-2xl md:[&_h1]:text-3xl [&_h1]:font-bold [&_h1]:text-black [&_h1]:mt-6 [&_h1]:mb-4
             [&_h2]:text-xl md:[&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-black [&_h2]:border-l-4 [&_h2]:border-[#0284c7] [&_h2]:pl-3 [&_h2]:mt-6 [&_h2]:mb-4
             [&_h3]:text-lg md:[&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-black [&_h3]:mt-5 [&_h3]:mb-3"
-          dangerouslySetInnerHTML={{ __html: category.description }}
+          html={category.description}
         />
       )}
 
@@ -75,11 +76,9 @@ export default async function CategoryPage({
                   {blog.title}
                 </p>
                 {/* 携帯版の文字サイズを自己紹介と同じ text-sm に変更（PC版 text-base はそのまま維持） */}
-                <div
+                <MathHtml
                   className="text-black text-sm md:text-base leading-relaxed md:leading-loose font-medium"
-                  dangerouslySetInnerHTML={{
-                    __html: blog.content || blog.body || '',
-                  }}
+                  html={blog.content || blog.body || ''}
                 />
               </div>
             ) : (
