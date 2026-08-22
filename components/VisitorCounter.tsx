@@ -2,14 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
-export default function VisitorCounter() {
-  const [counts, setCounts] = useState<{ today: number | null; month: number | null }>({
-    today: null,
-    month: null,
-  });
-
+// カウント処理を行う関数（全ページ共通で1日1回だけカウントアップ）
+export function useVisitorTracker() {
   useEffect(() => {
-    const fetchCounts = async () => {
+    const track = async () => {
       try {
         const now = new Date();
         const year = now.getFullYear();
@@ -18,27 +14,49 @@ export default function VisitorCounter() {
 
         const dayKey = `day_${year}_${month}_${day}`;
         const monthKey = `month_${year}_${month}`;
-
-        // 今日の訪問記録があるか確認（同一ブラウザでの二重カウント防止）
         const storageKey = `visited_${year}_${month}_${day}`;
-        const isAlreadyVisitedToday = localStorage.getItem(storageKey);
+
+        // すでに今日カウント済みなら何もしない
+        if (localStorage.getItem(storageKey)) return;
 
         const namespace = 'turedure-physics';
-        const action = isAlreadyVisitedToday ? '' : '/up';
+        await Promise.all([
+          fetch(`https://api.counterapi.dev/v1/${namespace}/${dayKey}/up`).catch(() => null),
+          fetch(`https://api.counterapi.dev/v1/${namespace}/${monthKey}/up`).catch(() => null),
+        ]);
 
-        // 今日のカウント取得（初回は +1、2回目以降は取得のみ）
-        const dayUrl = isAlreadyVisitedToday
-          ? `https://api.counterapi.dev/v1/${namespace}/${dayKey}`
-          : `https://api.counterapi.dev/v1/${namespace}/${dayKey}/up`;
+        localStorage.setItem(storageKey, 'true');
+      } catch {
+        // エラー時は無視
+      }
+    };
 
-        // 今月のカウント取得
-        const monthUrl = isAlreadyVisitedToday
-          ? `https://api.counterapi.dev/v1/${namespace}/${monthKey}`
-          : `https://api.counterapi.dev/v1/${namespace}/${monthKey}/up`;
+    track();
+  }, []);
+}
+
+// TOPページの右下に数字だけを表示するコンポーネント
+export default function VisitorCounter() {
+  const [counts, setCounts] = useState<{ today: number | null; month: number | null }>({
+    today: null,
+    month: null,
+  });
+
+  useEffect(() => {
+    const getCounts = async () => {
+      try {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+
+        const dayKey = `day_${year}_${month}_${day}`;
+        const monthKey = `month_${year}_${month}`;
+        const namespace = 'turedure-physics';
 
         const [dayRes, monthRes] = await Promise.all([
-          fetch(dayUrl).catch(() => null),
-          fetch(monthUrl).catch(() => null),
+          fetch(`https://api.counterapi.dev/v1/${namespace}/${dayKey}`).catch(() => null),
+          fetch(`https://api.counterapi.dev/v1/${namespace}/${monthKey}`).catch(() => null),
         ]);
 
         const dayData = dayRes && dayRes.ok ? await dayRes.json() : null;
@@ -48,20 +66,15 @@ export default function VisitorCounter() {
           today: dayData?.count ?? 1,
           month: monthData?.count ?? 1,
         });
-
-        // 本日カウント完了の目印を保存
-        localStorage.setItem(storageKey, 'true');
       } catch {
         // エラー時は非表示
       }
     };
 
-    fetchCounts();
+    getCounts();
   }, []);
 
-  if (counts.today === null || counts.month === null) {
-    return null;
-  }
+  if (counts.today === null || counts.month === null) return null;
 
   return (
     <div

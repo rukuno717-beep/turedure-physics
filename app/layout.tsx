@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "katex/dist/katex.min.css";
 import "./globals.css";
 import Header from "@/components/Header";
+import GlobalTracker from "@/components/GlobalTracker";
 
 const notoSerif = Noto_Serif_JP({
   subsets: ["latin"],
@@ -13,7 +14,6 @@ const notoSerif = Noto_Serif_JP({
 export const metadata: Metadata = {
   title: "徒然物理学",
   description: "徒然なるままに物理学を綴るサイト",
-  // Google Search Console の所有者確認キー
   verification: {
     google: "Q4k-ngpC_4G1tmPuISjxh27mXuW5l3mO3to9BMYJIaw",
   },
@@ -27,6 +27,9 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${notoSerif.className} bg-neutral-50 text-neutral-900 antialiased min-h-screen flex flex-col`}>
+        {/* 全ページ共通の訪問者トラッカー（重複なしカウント） */}
+        <GlobalTracker />
+
         {/* 共通ヘッダー */}
         <Header />
 
