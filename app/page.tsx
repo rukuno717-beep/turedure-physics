@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { PhysicsIcon, NoteIcon, BookIcon, CoffeeIcon } from '@/components/Header';
+import VisitorCounter from '@/components/VisitorCounter';
 
 export default function Home() {
   return (
@@ -119,7 +120,7 @@ export default function Home() {
           </p>
 
           <p>
-            自分なりにぶつぶつ考えたことを主にブログみたいな感じで気ままに更新していく予定です。1週間に１回は何かを更新する予定です。
+            自分なりにぶつぶつ考えたことを主にブログみたいな感じで気ままに更新していく予定です。1週間に1回は何かを更新する予定です。
           </p>
 
           {/* お問い合わせ・連絡先 */}
@@ -135,6 +136,9 @@ export default function Home() {
               まで
             </p>
           </div>
+
+          {/* 右下の訪問者カウンター（数字のみ） */}
+          <VisitorCounter />
         </div>
       </section>
     </div>
