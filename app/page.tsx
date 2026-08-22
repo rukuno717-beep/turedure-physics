@@ -16,10 +16,11 @@ export default function Home() {
           物理学とことこでは場の量子論に至る過程を分かりやすく説明する予定です。<br />
           物理備忘録では物理学とことこの草案や日々の考察や学んだことを書いていきます。<br />
           読書とことこでは、読んで面白い本があったら感想を書いていきます。<br />
-          日常備忘録は日常の備忘録です。
+          日常備忘録は日常の備忘録です。<br />
+          Yの日常備忘録はYによる日常の備忘録です。
         </p>
 
-        {/* 4つのカテゴリーボタン */}
+        {/* 5つのカテゴリーボタン */}
         <div className="space-y-3">
           <Link
             href="/categories/o3fze0op6w"
@@ -58,6 +59,16 @@ export default function Home() {
             <span className="w-4 h-4 rounded-full bg-white flex-shrink-0 shadow-sm"></span>
             <span className="flex items-center gap-2 underline underline-offset-4 decoration-2 font-semibold">
               <CoffeeIcon /> 日常備忘録
+            </span>
+          </Link>
+
+          <Link
+            href="/categories/q2s5e38re6"
+            className="flex items-center gap-3 bg-[#bae6fd] hover:bg-[#7dd3fc] transition-all px-4 py-3.5 rounded-lg text-black text-sm md:text-base group shadow-sm"
+          >
+            <span className="w-4 h-4 rounded-full bg-white flex-shrink-0 shadow-sm"></span>
+            <span className="flex items-center gap-2 underline underline-offset-4 decoration-2 font-semibold">
+              <CoffeeIcon /> Yの日常備忘録
             </span>
           </Link>
         </div>
@@ -114,7 +125,7 @@ export default function Home() {
           {/* お問い合わせ・連絡先 */}
           <div className="mt-8 pt-6 border-t border-neutral-300 text-black font-semibold">
             <p>
-              質問や指摘がございましたら<br />
+              ご質問やご指摘がございましたら<br />
               <a
                 href="mailto:rukuno717@gmail.com"
                 className="text-[#0284c7] hover:underline font-bold underline-offset-4"

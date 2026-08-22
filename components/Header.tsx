@@ -45,7 +45,7 @@ export const CoffeeIcon = () => (
 export default function Header() {
   const pathname = usePathname();
 
-  // 2枚並べる設定（読書・日常）
+  // 2枚並べる設定（読書・日常・Yの日常備忘録）
   let isDual = false;
   let leftImage = "";
   let leftPos = "center";
@@ -67,8 +67,11 @@ export default function Header() {
     leftPos = "center 30%";
     rightImage = "/hakusekirei.jpg";
     rightPos = "25% 45%";
-  } else if (pathname.includes("/categories/nya1qqbmm")) {
-    // 日常備忘録（メジロ2枚並び）
+  } else if (
+    pathname.includes("/categories/nya1qqbmm") ||
+    pathname.includes("/categories/q2s5e38re6")
+  ) {
+    // 日常備忘録・Yの日常備忘録（メジロ2枚並び）
     isDual = true;
     leftImage = "/mejiro2.jpg";
     leftPos = "center 30%";
@@ -145,6 +148,9 @@ export default function Header() {
             <Link href="/categories/nya1qqbmm" className="hover:text-sky-600 transition-colors underline underline-offset-4 decoration-2 flex items-center gap-2">
               <CoffeeIcon /> 日常備忘録
             </Link>
+            <Link href="/categories/q2s5e38re6" className="hover:text-sky-600 transition-colors underline underline-offset-4 decoration-2 flex items-center gap-2">
+              <CoffeeIcon /> Yの日常備忘録
+            </Link>
           </nav>
         </div>
       </header>
@@ -163,6 +169,9 @@ export default function Header() {
           </Link>
           <Link href="/categories/nya1qqbmm" className="flex items-center gap-1">
             <CoffeeIcon /> 日常備忘録
+          </Link>
+          <Link href="/categories/q2s5e38re6" className="flex items-center gap-1">
+            <CoffeeIcon /> Yの日常備忘録
           </Link>
         </nav>
       </div>
