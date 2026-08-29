@@ -12,20 +12,20 @@ export function useVisitorTracker() {
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
 
-        const dayKey = `tp_day_${year}_${month}_${day}`;
-        const monthKey = `tp_month_${year}_${month}`;
+        const dayKey = `turedure_physics_day_${year}_${month}_${day}`;
+        const monthKey = `turedure_physics_month_${year}_${month}`;
         const storageKey = `visited_${year}_${month}_${day}`;
 
-        // 今日の訪問記録が既にあればスキップ
+        // 今日の訪問記録が既にあれば何もしない
         if (localStorage.getItem(storageKey)) return;
 
-        // 今日と今月のカウントをそれぞれ +1
+        // 今日と今月のカウントをそれぞれ確実に +1
         await Promise.all([
-          fetch(`https://api.counterapi.dev/v1/turedurephysics/${dayKey}/up`, { mode: 'cors' }).catch(() => null),
-          fetch(`https://api.counterapi.dev/v1/turedurephysics/${monthKey}/up`, { mode: 'cors' }).catch(() => null),
+          fetch(`https://countapi.mileshilliard.com/api/v1/hit/${dayKey}`).catch(() => null),
+          fetch(`https://countapi.mileshilliard.com/api/v1/hit/${monthKey}`).catch(() => null),
         ]);
 
-        // 今日アクセスしたフラグを保存
+        // 今日カウントした目印をブラウザに保存
         localStorage.setItem(storageKey, 'true');
       } catch {
         // エラー時は無視
@@ -38,11 +38,10 @@ export function useVisitorTracker() {
 
 // TOPページ右下に「今日 / 今月」の数字を表示するコンポーネント
 export default function VisitorCounter() {
-  const [counts, setCounts] = useState<{ today: number; month: number }>({
-    today: 1,
-    month: 1,
+  const [counts, setCounts] = useState<{ today: number | null; month: number | null }>({
+    today: null,
+    month: null,
   });
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const getCounts = async () => {
@@ -52,46 +51,49 @@ export default function VisitorCounter() {
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
 
-        const dayKey = `tp_day_${year}_${month}_${day}`;
-        const monthKey = `tp_month_${year}_${month}`;
+        const dayKey = `turedure_physics_day_${year}_${month}_${day}`;
+        const monthKey = `turedure_physics_month_${year}_${month}`;
         const storageKey = `visited_${year}_${month}_${day}`;
         const isVisited = localStorage.getItem(storageKey);
 
-        const endpoint = isVisited ? '' : '/up';
+        // まだ今日カウントされていない場合は hit（+1）、カウント済みなら get（取得のみ）
+        const action = isVisited ? 'get' : 'hit';
 
         const [dayRes, monthRes] = await Promise.all([
-          fetch(`https://api.counterapi.dev/v1/turedurephysics/${dayKey}${endpoint}`, { mode: 'cors' }).catch(() => null),
-          fetch(`https://api.counterapi.dev/v1/turedurephysics/${monthKey}${endpoint}`, { mode: 'cors' }).catch(() => null),
+          fetch(`https://countapi.mileshilliard.com/api/v1/${action}/${dayKey}`).catch(() => null),
+          fetch(`https://countapi.mileshilliard.com/api/v1/${action}/${monthKey}`).catch(() => null),
         ]);
 
-        let dVal = 1;
-        let mVal = 1;
+        let dVal: number | null = null;
+        let mVal: number | null = null;
 
         if (dayRes && dayRes.ok) {
           const d = await dayRes.json();
-          if (typeof d.count === 'number') dVal = d.count;
+          dVal = Number(d.value) || null;
         }
 
         if (monthRes && monthRes.ok) {
           const m = await monthRes.json();
-          if (typeof m.count === 'number') mVal = m.count;
+          mVal = Number(m.value) || null;
         }
 
-        if (!isVisited) {
+        if (!isVisited && (dVal !== null || mVal !== null)) {
           localStorage.setItem(storageKey, 'true');
         }
 
-        setCounts({ today: dVal, month: mVal });
-        setLoaded(true);
+        setCounts({
+          today: dVal ?? 1,
+          month: mVal ?? 1,
+        });
       } catch {
-        setLoaded(true);
+        // エラー時は非表示
       }
     };
 
     getCounts();
   }, []);
 
-  if (!loaded) return null;
+  if (counts.today === null || counts.month === null) return null;
 
   return (
     <div
