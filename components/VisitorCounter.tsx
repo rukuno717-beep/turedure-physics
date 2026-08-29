@@ -12,8 +12,8 @@ export function useVisitorTracker() {
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
 
-        const dayKey = `turedure_day_${year}_${month}_${day}`;
-        const monthKey = `turedure_month_${year}_${month}`;
+        const dayKey = `tp_day_${year}_${month}_${day}`;
+        const monthKey = `tp_month_${year}_${month}`;
         const storageKey = `visited_${year}_${month}_${day}`;
 
         // 今日の訪問記録が既にあればスキップ
@@ -21,8 +21,8 @@ export function useVisitorTracker() {
 
         // 今日と今月のカウントをそれぞれ +1
         await Promise.all([
-          fetch(`https://api.counterapi.dev/v1/turedure-physics/${dayKey}/up`).catch(() => null),
-          fetch(`https://api.counterapi.dev/v1/turedure-physics/${monthKey}/up`).catch(() => null),
+          fetch(`https://api.counterapi.dev/v1/turedurephysics/${dayKey}/up`, { mode: 'cors' }).catch(() => null),
+          fetch(`https://api.counterapi.dev/v1/turedurephysics/${monthKey}/up`, { mode: 'cors' }).catch(() => null),
         ]);
 
         // 今日アクセスしたフラグを保存
@@ -38,10 +38,11 @@ export function useVisitorTracker() {
 
 // TOPページ右下に「今日 / 今月」の数字を表示するコンポーネント
 export default function VisitorCounter() {
-  const [counts, setCounts] = useState<{ today: number | null; month: number | null }>({
-    today: null,
-    month: null,
+  const [counts, setCounts] = useState<{ today: number; month: number }>({
+    today: 1,
+    month: 1,
   });
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const getCounts = async () => {
@@ -51,50 +52,46 @@ export default function VisitorCounter() {
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
 
-        const dayKey = `turedure_day_${year}_${month}_${day}`;
-        const monthKey = `turedure_month_${year}_${month}`;
+        const dayKey = `tp_day_${year}_${month}_${day}`;
+        const monthKey = `tp_month_${year}_${month}`;
         const storageKey = `visited_${year}_${month}_${day}`;
         const isVisited = localStorage.getItem(storageKey);
 
-        let dayCount: number | null = null;
-        let monthCount: number | null = null;
-
-        // まだ今日のカウントが送信されていない場合はカウントアップしつつ取得、送信済みなら取得のみ
         const endpoint = isVisited ? '' : '/up';
 
         const [dayRes, monthRes] = await Promise.all([
-          fetch(`https://api.counterapi.dev/v1/turedure-physics/${dayKey}${endpoint}`).catch(() => null),
-          fetch(`https://api.counterapi.dev/v1/turedure-physics/${monthKey}${endpoint}`).catch(() => null),
+          fetch(`https://api.counterapi.dev/v1/turedurephysics/${dayKey}${endpoint}`, { mode: 'cors' }).catch(() => null),
+          fetch(`https://api.counterapi.dev/v1/turedurephysics/${monthKey}${endpoint}`, { mode: 'cors' }).catch(() => null),
         ]);
+
+        let dVal = 1;
+        let mVal = 1;
 
         if (dayRes && dayRes.ok) {
           const d = await dayRes.json();
-          dayCount = typeof d.count === 'number' ? d.count : null;
+          if (typeof d.count === 'number') dVal = d.count;
         }
 
         if (monthRes && monthRes.ok) {
           const m = await monthRes.json();
-          monthCount = typeof m.count === 'number' ? m.count : null;
+          if (typeof m.count === 'number') mVal = m.count;
         }
 
-        if (!isVisited && (dayCount !== null || monthCount !== null)) {
+        if (!isVisited) {
           localStorage.setItem(storageKey, 'true');
         }
 
-        setCounts({
-          today: dayCount,
-          month: monthCount,
-        });
+        setCounts({ today: dVal, month: mVal });
+        setLoaded(true);
       } catch {
-        // エラー時は非表示
+        setLoaded(true);
       }
     };
 
     getCounts();
   }, []);
 
-  // カウントが取得できていない間は何も表示しない
-  if (counts.today === null || counts.month === null) return null;
+  if (!loaded) return null;
 
   return (
     <div
