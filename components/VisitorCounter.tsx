@@ -11,21 +11,14 @@ export function useVisitorTracker() {
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
-
-        const dayKey = `turedure_physics_day_${year}_${month}_${day}`;
-        const monthKey = `turedure_physics_month_${year}_${month}`;
         const storageKey = `visited_${year}_${month}_${day}`;
 
-        // 今日の訪問記録が既にあれば何もしない
+        // 今日の訪問記録がすでにあれば何もしない
         if (localStorage.getItem(storageKey)) return;
 
-        // 今日と今月のカウントをそれぞれ確実に +1
-        await Promise.all([
-          fetch(`https://countapi.mileshilliard.com/api/v1/hit/${dayKey}`).catch(() => null),
-          fetch(`https://countapi.mileshilliard.com/api/v1/hit/${monthKey}`).catch(() => null),
-        ]);
+        // 自サイトのAPI経由で +1 を送信
+        await fetch('/api/counter?action=up', { cache: 'no-store' });
 
-        // 今日カウントした目印をブラウザに保存
         localStorage.setItem(storageKey, 'true');
       } catch {
         // エラー時は無視
@@ -36,12 +29,9 @@ export function useVisitorTracker() {
   }, []);
 }
 
-// TOPページ右下に「今日 / 今月」の数字を表示するコンポーネント
+// TOPページ右下に数字を表示するコンポーネント
 export default function VisitorCounter() {
-  const [counts, setCounts] = useState<{ today: number | null; month: number | null }>({
-    today: null,
-    month: null,
-  });
+  const [counts, setCounts] = useState<{ today: number; month: number } | null>(null);
 
   useEffect(() => {
     const getCounts = async () => {
@@ -50,50 +40,33 @@ export default function VisitorCounter() {
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
-
-        const dayKey = `turedure_physics_day_${year}_${month}_${day}`;
-        const monthKey = `turedure_physics_month_${year}_${month}`;
         const storageKey = `visited_${year}_${month}_${day}`;
         const isVisited = localStorage.getItem(storageKey);
 
-        // まだ今日カウントされていない場合は hit（+1）、カウント済みなら get（取得のみ）
-        const action = isVisited ? 'get' : 'hit';
+        // 未訪問なら +1 しながら取得、訪問済みなら取得のみ
+        const url = isVisited ? '/api/counter' : '/api/counter?action=up';
+        const res = await fetch(url, { cache: 'no-store' });
 
-        const [dayRes, monthRes] = await Promise.all([
-          fetch(`https://countapi.mileshilliard.com/api/v1/${action}/${dayKey}`).catch(() => null),
-          fetch(`https://countapi.mileshilliard.com/api/v1/${action}/${monthKey}`).catch(() => null),
-        ]);
-
-        let dVal: number | null = null;
-        let mVal: number | null = null;
-
-        if (dayRes && dayRes.ok) {
-          const d = await dayRes.json();
-          dVal = Number(d.value) || null;
+        if (res.ok) {
+          const data = await res.json();
+          setCounts({
+            today: data.today,
+            month: data.month,
+          });
+          if (!isVisited) {
+            localStorage.setItem(storageKey, 'true');
+          }
         }
-
-        if (monthRes && monthRes.ok) {
-          const m = await monthRes.json();
-          mVal = Number(m.value) || null;
-        }
-
-        if (!isVisited && (dVal !== null || mVal !== null)) {
-          localStorage.setItem(storageKey, 'true');
-        }
-
-        setCounts({
-          today: dVal ?? 1,
-          month: mVal ?? 1,
-        });
       } catch {
-        // エラー時は非表示
+        // エラー時はフォールバック表示
+        setCounts({ today: 1, month: 1 });
       }
     };
 
     getCounts();
   }, []);
 
-  if (counts.today === null || counts.month === null) return null;
+  if (!counts) return null;
 
   return (
     <div
