@@ -13,7 +13,7 @@ export default async function CategoryPage({
   const isDirectView =
     id === '5fhila85r2-1' || id === 'nya1qqbmm' || id === 'q2s5e38re6';
 
-  // カテゴリ情報と記事一覧を取得
+  // カテゴリ情報と記事一覧を取得（limit: 100 を指定して過去の投稿も漏れなく取得）
   const [category, blogsData] = await Promise.all([
     client.get({
       endpoint: 'categories',
@@ -24,6 +24,7 @@ export default async function CategoryPage({
       queries: {
         filters: `category[equals]${id}`,
         orders: '-publishedAt',
+        limit: 100,
       },
     }),
   ]);
