@@ -9,9 +9,9 @@ export default async function CategoryPage({
 }) {
   const { id } = await params;
 
-  // 物理備忘録 または 日常備忘録 または Yの日常備忘録 かどうか判定（飛ばずにその場でタイトル＋本文を表示）
+  // 物理備忘録 または 日常備忘録 または Yの日常備忘録 または Tの日常備忘録 かどうか判定（飛ばずにその場でタイトル＋本文を表示）
   const isDirectView =
-    id === '5fhila85r2-1' || id === 'nya1qqbmm' || id === 'q2s5e38re6';
+    id === '5fhila85r2-1' || id === 'nya1qqbmm' || id === 'q2s5e38re6' || id === 'sd_cl14-zwy2';
 
   // カテゴリ情報と記事一覧を取得（limit: 100 を指定して過去の投稿も漏れなく取得）
   const [category, blogsData] = await Promise.all([
@@ -69,7 +69,7 @@ export default async function CategoryPage({
         {blogs && blogs.length > 0 ? (
           blogs.map((blog: any) =>
             isDirectView ? (
-              /* 【物理備忘録・日常備忘録・Yの日常備忘録】リンクなし：タイトルと本文を表示 */
+              /* 【物理備忘録・日常備忘録・Yの日常備忘録・Tの日常備忘録】リンクなし：タイトルと本文を表示 */
               <div
                 key={blog.id}
                 className="w-full bg-[#bae6fd] rounded-xl p-5 md:p-6 shadow-sm space-y-3"
